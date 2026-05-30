@@ -8,6 +8,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import threading
 import time
+import logging
 
 _event_loop = None
 _loop_thread = None
@@ -31,6 +32,10 @@ app = Flask(__name__)
 
 API_ACCESSCODE = os.getenv('API_ACCESSCODE', None)
 
+# Suppress noisy werkzeug logging for malformed requests
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 CORS(app, resources={
     r"/*": {
         "origins": "*",
@@ -41,6 +46,26 @@ CORS(app, resources={
     }
 })
 
+@app.before_request
+def validate_request():
+    """Validate incoming requests and reject obviously malformed ones"""
+    # Allow preflight CORS requests
+    if request.method == 'OPTIONS':
+        return None
+    
+    # Validate that POST/PUT requests have proper headers
+    if request.method in ['POST', 'PUT']:
+        content_type = request.headers.get('Content-Type', '')
+        if not content_type:
+            return jsonify({'error': 'Invalid Content-Type'}), 400
+    
+    return None
+
+
+@app.errorhandler(400)
+def bad_request(e):
+    """Handle bad requests silently without logging spam"""
+    return jsonify({"error": "Bad request"}), 400
 
 @app.errorhandler(500)
 def handle_500_error(e):
