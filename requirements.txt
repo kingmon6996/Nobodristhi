@@ -2,3 +2,4 @@ requests
 asyncpg
 Flask
 flask-cors
+python-dotenv
