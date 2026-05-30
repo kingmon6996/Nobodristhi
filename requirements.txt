@@ -1,0 +1,4 @@
+requests
+asyncpg
+Flask
+flask-cors
