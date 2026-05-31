@@ -33,6 +33,20 @@ type SelectedStory =
   | null;
 
 import { useQuery } from "@tanstack/react-query";
+import { useTemplates } from "@/store/templates";
+import template1Html from "@/templates/template1.html?raw";
+import template2Html from "@/templates/template2.html?raw";
+import template3Html from "@/templates/template3.html?raw";
+import template4Html from "@/templates/template4.html?raw";
+import template5Html from "@/templates/template5.html?raw";
+
+const TEMPLATE_HTML: Record<string, string> = {
+  template1: template1Html,
+  template2: template2Html,
+  template3: template3Html,
+  template4: template4Html,
+  template5: template5Html,
+};
 
 function NewspaperViewer() {
   const { year, month, day } = Route.useParams();
@@ -41,6 +55,12 @@ function NewspaperViewer() {
   const [pageIdx, setPageIdx] = useState(0);
   const [showIndex, setShowIndex] = useState(false);
   const [selected, setSelected] = useState<SelectedStory>(null);
+  
+  const loadActiveTemplate = useTemplates((s) => s.loadActiveTemplate);
+  const activeTemplateId = useTemplates((s) => s.activeTemplateId);
+  useEffect(() => {
+    loadActiveTemplate();
+  }, [loadActiveTemplate]);
   
   const { data: reports = [] } = useQuery<Report[]>({
     queryKey: ['daily_news', year, month, day],
@@ -60,6 +80,7 @@ function NewspaperViewer() {
         location: r.location ? (Array.isArray(r.location) ? r.location.join(", ") : r.location) : undefined,
         source: r.source,
         images: r.img_url ? [r.img_url] : [],
+        audioUrl: r.voice_url,
         status: "approved",
         createdAt: new Date(r.created_at).getTime(),
         author: r.reporter_id || "Staff Writer",
@@ -98,9 +119,21 @@ function NewspaperViewer() {
       if (e.key === "ArrowLeft") setPageIdx((p) => Math.max(0, p - 1));
       if (e.key === "Escape") { setShowIndex(false); setSelected(null); }
     };
+    const onMessage = (e: MessageEvent) => {
+      if (e.data?.type === 'open_report' && e.data.id) {
+        const r = reports.find(rep => String(rep.id) === String(e.data.id));
+        if (r) {
+          setSelected({ kind: "report", report: r, section: "Front Page" });
+        }
+      }
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [totalPages]);
+    window.addEventListener("message", onMessage);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("message", onMessage);
+    };
+  }, [totalPages, reports]);
 
   const openReport = (r: Report, section: string) => setSelected({ kind: "report", report: r, section });
   const openFiller = (s: FillerStory, section: string) => setSelected({ kind: "filler", story: s, section });
@@ -180,13 +213,15 @@ function NewspaperViewer() {
 
           <div
             ref={paperRef}
-            className="bg-[#fdfcf7] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] origin-top transition-transform print:shadow-none"
+            className={activeTemplateId === 'template1' ? "bg-[#fdfcf7] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] origin-top transition-transform print:shadow-none" : "bg-white shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] origin-top transition-transform print:shadow-none"}
             style={{
-              width: reading ? "min(720px, 90vw)" : "min(1100px, 92vw)",
+              width: activeTemplateId === 'template1' ? (reading ? "min(720px, 90vw)" : "min(1100px, 92vw)") : "1440px",
+              height: activeTemplateId === 'template1' ? "auto" : "2000px",
               transform: `scale(${zoom})`,
               transformOrigin: "top center",
             }}
           >
+            {activeTemplateId === 'template1' ? (
             <div className="px-12 pt-10 pb-12 text-[#1a1a1a] bg-[#f4f4f2]" style={{ fontFamily: '"Libre Baskerville", serif' }}>
               <header className="text-center mb-8">
                 <div className="flex justify-between items-end border-b border-[#1a1a1a] py-1 text-[10px] font-bold uppercase tracking-widest">
@@ -230,6 +265,14 @@ function NewspaperViewer() {
                 <p>© 2026 THE NOBODORSHI PUBLISHING COMPANY • ALL RIGHTS RESERVED • HIGH-DENSITY EDITORIAL EXCELLENCE</p>
               </footer>
             </div>
+            ) : (
+              <iframe
+                srcDoc={injectDataIntoHTML(TEMPLATE_HTML[activeTemplateId] || "", reports)}
+                title="Newspaper Template"
+                className="w-full h-full border-0"
+                sandbox="allow-scripts allow-same-origin"
+              />
+            )}
           </div>
 
           {nextPage && (
@@ -342,73 +385,155 @@ function Divider() {
 // ---------- Detail panels ----------
 
 function ReportDetail({ report, section }: { report: Report; section: string }) {
+  const [authorName, setAuthorName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!report.author) return;
+    // Assuming report.author might be the member ID
+    fetch(getBackendUrl('/member/data'), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: report.author })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data?.name) {
+          setAuthorName(data.data.name);
+        }
+      })
+      .catch(console.error);
+  }, [report.author]);
+
+  const bylineAuthor = authorName || report.author;
+
+  const handleDownload = async () => {
+    // @ts-ignore
+    const html2pdf = (await import('html2pdf.js')).default;
+    const element = document.getElementById(`report-detail-${report.id}`);
+    const opt = {
+      margin:       10,
+      filename:     `Nobodorshi-${report.headline.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, backgroundColor: '#0a0a0a' },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  };
+
   return (
-    <article className="space-y-5">
-      <div>
-        <div className="text-[10px] uppercase tracking-[0.25em] text-neutral-400">{section}</div>
-        <h3 className="font-serif text-2xl text-white mt-1 leading-tight">{report.headline}</h3>
-        <div className="text-[11px] text-neutral-500 italic mt-2">
-          By {report.author}{report.location ? ` · ${report.location}` : ""}
+    <div className="flex flex-col gap-6 pb-8">
+      <article id={`report-detail-${report.id}`} className="space-y-5 bg-neutral-950 text-neutral-100 pb-4">
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.25em] text-neutral-400">{section}</div>
+          <h3 className="font-serif text-2xl text-white mt-1 leading-tight">{report.headline}</h3>
+          <div className="text-[11px] text-neutral-500 italic mt-2">
+            By {bylineAuthor}
+            {report.location && (
+              <span>
+                {" · "}
+                <a 
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(report.location)}`} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="underline hover:text-white"
+                >
+                  {report.location}
+                </a>
+              </span>
+            )}
+          </div>
         </div>
+
+        {report.audioUrl && (
+          <div className="mt-4 bg-neutral-900 p-2 rounded-md border border-neutral-800">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 mb-2 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">volume_up</span> Audio Report
+            </div>
+            <audio controls className="w-full h-8" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}>
+              <source src={getBackendUrl(report.audioUrl)} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        )}
+
+        {report.ai?.summary && (
+          <div className="border-l-2 border-white pl-3 text-sm text-neutral-200 italic">
+            {report.ai.summary}
+          </div>
+        )}
+
+        <p className="text-[13.5px] leading-relaxed text-neutral-300">
+          {report.ai?.rewritten ?? report.description}
+        </p>
+
+        {report.ai?.tags && (
+          <div className="flex flex-wrap gap-1.5 mt-4">
+            {report.ai.tags.map((t) => (
+              <span key={t} className="text-[10px] uppercase tracking-[0.18em] text-neutral-300 border border-neutral-700 px-2 py-0.5 rounded-full">
+                #{t}
+              </span>
+            ))}
+          </div>
+        )}
+      </article>
+
+      <div className="pt-2 border-t border-neutral-800">
+        <button 
+          onClick={handleDownload} 
+          className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-neutral-300 hover:text-white bg-neutral-900 hover:bg-neutral-800 transition border border-neutral-700 rounded px-4 py-3 w-full"
+        >
+          <Download className="w-4 h-4" />
+          Download Section PDF
+        </button>
       </div>
-
-      {report.ai?.summary && (
-        <div className="border-l-2 border-white pl-3 text-sm text-neutral-200 italic">
-          {report.ai.summary}
-        </div>
-      )}
-
-      <p className="text-[13.5px] leading-relaxed text-neutral-300">
-        {report.ai?.rewritten ?? report.description}
-      </p>
-
-      {report.ai && (
-        <div className="border border-neutral-800 rounded p-4 space-y-2 text-[12px]">
-          <Row k="Credibility" v={`${report.ai.credibility}%`} />
-          <Row k="Misinformation risk" v={`${report.ai.misinformation}%`} />
-          <Row k="Sentiment" v={report.ai.sentiment} />
-          <Row k="Urgency" v={report.ai.urgency} />
-          <Row k="Status" v={report.status} />
-        </div>
-      )}
-
-      {report.ai?.tags && (
-        <div className="flex flex-wrap gap-1.5">
-          {report.ai.tags.map((t) => (
-            <span key={t} className="text-[10px] uppercase tracking-[0.18em] text-neutral-300 border border-neutral-700 px-2 py-0.5 rounded-full">
-              #{t}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {report.source && (
-        <a href={report.source} target="_blank" rel="noreferrer" className="block text-[11px] text-neutral-400 underline">
-          Continue reading source ↗
-        </a>
-      )}
-    </article>
+    </div>
   );
 }
 
 function FillerDetail({ story, section }: { story: FillerStory; section: string }) {
+  const handleDownload = async () => {
+    // @ts-ignore
+    const html2pdf = (await import('html2pdf.js')).default;
+    const element = document.getElementById(`filler-detail-${story.id}`);
+    const opt = {
+      margin:       10,
+      filename:     `Nobodorshi-${story.headline.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, backgroundColor: '#0a0a0a' },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  };
+
   return (
-    <article className="space-y-4">
-      <div>
-        <div className="text-[10px] uppercase tracking-[0.25em] text-neutral-400">{section} · {story.tag ?? story.kind}</div>
-        <h3 className="font-serif text-2xl text-white mt-1 leading-tight">{story.headline}</h3>
-        {story.dek && <div className="text-sm text-neutral-300 italic mt-2">{story.dek}</div>}
-        <div className="text-[11px] text-neutral-500 italic mt-2">
-          By {story.author}{story.location ? ` · ${story.location}` : ""}
+    <div className="flex flex-col gap-6 pb-8">
+      <article id={`filler-detail-${story.id}`} className="space-y-4 bg-neutral-950 text-neutral-100 pb-4">
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.25em] text-neutral-400">{section} · {story.tag ?? story.kind}</div>
+          <h3 className="font-serif text-2xl text-white mt-1 leading-tight">{story.headline}</h3>
+          {story.dek && <div className="text-sm text-neutral-300 italic mt-2">{story.dek}</div>}
+          <div className="text-[11px] text-neutral-500 italic mt-2">
+            By {story.author}{story.location ? ` · ${story.location}` : ""}
+          </div>
         </div>
+        {story.body && <p className="text-[13.5px] leading-relaxed text-neutral-300">{story.body}</p>}
+        <div className="border border-neutral-800 rounded p-4 space-y-2 text-[12px] mt-4">
+          <Row k="Section" v={section} />
+          <Row k="Story type" v={story.kind} />
+          <Row k="Filed" v="Today" />
+        </div>
+      </article>
+
+      <div className="pt-2 border-t border-neutral-800">
+        <button 
+          onClick={handleDownload} 
+          className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.2em] text-neutral-300 hover:text-white bg-neutral-900 hover:bg-neutral-800 transition border border-neutral-700 rounded px-4 py-3 w-full"
+        >
+          <Download className="w-4 h-4" />
+          Download Section PDF
+        </button>
       </div>
-      {story.body && <p className="text-[13.5px] leading-relaxed text-neutral-300">{story.body}</p>}
-      <div className="border border-neutral-800 rounded p-4 space-y-2 text-[12px]">
-        <Row k="Section" v={section} />
-        <Row k="Story type" v={story.kind} />
-        <Row k="Filed" v="Today" />
-      </div>
-    </article>
+    </div>
   );
 }
 
@@ -420,6 +545,131 @@ function Row({ k, v }: { k: string; v: string }) {
     </div>
   );
 }
+
+function injectDataIntoHTML(html: string, reports: Report[]) {
+  if (!reports || reports.length === 0 || !html) return html;
+  
+  // Replace titles globally
+  let processedHtml = html.replace(/ZAIRA/g, 'Nobodorshi')
+                          .replace(/Zaira/g, 'Nobodorshi')
+                          .replace(/The Chronicle/gi, 'Nobodorshi');
+  
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(processedHtml, "text/html");
+    const updatedElements = new Set<Element>();
+    
+    const h1s = Array.from(doc.querySelectorAll("h1"));
+    const h2s = Array.from(doc.querySelectorAll("h2"));
+    const h3s = Array.from(doc.querySelectorAll("h3"));
+    
+    if (h1s[0] && reports[0]) {
+      h1s[0].textContent = reports[0].headline;
+      updatedElements.add(h1s[0]);
+      
+      let nextElement = h1s[0].nextElementSibling;
+      while (nextElement && nextElement.tagName.toLowerCase() !== 'p') {
+        nextElement = nextElement.nextElementSibling;
+      }
+      if (nextElement) {
+        nextElement.textContent = reports[0].ai?.summary || reports[0].description.slice(0, 200) + "...";
+        updatedElements.add(nextElement);
+      }
+      
+      if (reports[0].images?.[0]) {
+        const imgs = Array.from(doc.querySelectorAll('img'));
+        const firstImg = imgs.find(img => !img.alt.toLowerCase().includes('author'));
+        if (firstImg) firstImg.src = reports[0].images[0];
+      }
+      
+      const parent = h1s[0].closest('article') || h1s[0].parentElement || h1s[0];
+      parent.setAttribute('data-report-id', String(reports[0].id));
+      parent.classList.add('cursor-pointer', 'hover:opacity-80', 'transition-opacity');
+    } else if (h1s[0]) {
+      const parent = h1s[0].closest('article') || h1s[0].parentElement;
+      if (parent) parent.remove();
+    }
+    
+    const secondaries = reports.slice(1, 1 + h2s.length);
+    h2s.forEach((h2, index) => {
+      if (secondaries[index]) {
+        h2.textContent = secondaries[index].headline;
+        updatedElements.add(h2);
+        let nextP = h2.nextElementSibling;
+        if (nextP && nextP.tagName.toLowerCase() === 'p') {
+          nextP.textContent = secondaries[index].ai?.summary || secondaries[index].description.slice(0, 150) + "...";
+          updatedElements.add(nextP);
+        }
+        const parent = h2.closest('article') || h2.parentElement || h2;
+        if (parent && secondaries[index].images?.[0]) {
+          const img = parent.querySelector('img');
+          if (img) img.src = secondaries[index].images[0];
+        }
+        parent.setAttribute('data-report-id', String(secondaries[index].id));
+        parent.classList.add('cursor-pointer', 'hover:opacity-80', 'transition-opacity');
+      } else {
+        const parent = h2.closest('article') || h2.parentElement;
+        if (parent) parent.remove();
+      }
+    });
+
+    const briefs = reports.slice(1 + h2s.length, 1 + h2s.length + h3s.length);
+    h3s.forEach((h3, index) => {
+      if (briefs[index]) {
+        h3.textContent = briefs[index].headline;
+        updatedElements.add(h3);
+        let nextP = h3.nextElementSibling;
+        if (nextP && nextP.tagName.toLowerCase() === 'p') {
+          nextP.textContent = briefs[index].ai?.summary || briefs[index].description.slice(0, 100) + "...";
+          updatedElements.add(nextP);
+        }
+        const parent = h3.closest('article') || h3.parentElement || h3;
+        if (parent && briefs[index].images?.[0]) {
+          const img = parent.querySelector('img');
+          if (img) img.src = briefs[index].images[0];
+        }
+        parent.setAttribute('data-report-id', String(briefs[index].id));
+        parent.classList.add('cursor-pointer', 'hover:opacity-80', 'transition-opacity');
+      } else {
+        const parent = h3.closest('article') || h3.parentElement;
+        if (parent) parent.remove();
+      }
+    });
+
+    // Cleanup extra paragraphs that are likely dummy text
+    const allParagraphs = doc.querySelectorAll('p');
+    allParagraphs.forEach(p => {
+      if (!updatedElements.has(p) && p.textContent && p.textContent.length > 80) {
+        // Only remove if it's not a short metadata paragraph
+        p.remove();
+      }
+    });
+
+    // Remove grayscale effect from all images to make them natural colors
+    const allImages = doc.querySelectorAll('img');
+    allImages.forEach(img => {
+      img.classList.remove('grayscale');
+    });
+
+    const script = doc.createElement('script');
+    script.textContent = `
+      document.addEventListener('click', function(e) {
+        const target = e.target.closest('[data-report-id]');
+        if (target) {
+          const id = target.getAttribute('data-report-id');
+          window.parent.postMessage({ type: 'open_report', id: id }, '*');
+        }
+      });
+    `;
+    doc.body.appendChild(script);
+    
+    return doc.documentElement.outerHTML;
+  } catch (e) {
+    console.error("Failed to parse and inject template data", e);
+    return processedHtml;
+  }
+}
+
 
 // ---------- Pages ----------
 

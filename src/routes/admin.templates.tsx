@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Eye, Newspaper, Layout } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Topbar } from "@/components/dash/Topbar";
 import { useTemplates, type NewsTemplate } from "@/store/templates";
 
@@ -26,7 +26,12 @@ function AdminTemplates() {
   const templates = useTemplates((s) => s.templates);
   const activeId = useTemplates((s) => s.activeTemplateId);
   const setActive = useTemplates((s) => s.setActiveTemplate);
+  const loadActiveTemplate = useTemplates((s) => s.loadActiveTemplate);
   const [previewId, setPreviewId] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadActiveTemplate();
+  }, [loadActiveTemplate]);
 
   const previewHtml = previewId ? TEMPLATE_HTML[previewId] : null;
 

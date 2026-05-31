@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { Reveal } from "./Reveal";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import tech from "@/assets/news-tech.jpg";
 import culture from "@/assets/news-culture.jpg";
 import world from "@/assets/news-world.jpg";
@@ -8,18 +10,36 @@ import business from "@/assets/news-business.jpg";
 import science from "@/assets/news-science.jpg";
 import politics from "@/assets/news-politics.jpg";
 
-const newsItems = [
-  { img: tech, title: "Inside the lab building tomorrow's models", category: "Technology" },
-  { img: culture, title: "Why the museum boom is reshaping identity", category: "Culture" },
-  { img: world, title: "A quiet alliance is rewriting trade in southern Europe", category: "World" },
-  { img: business, title: "The new geography of money and capital", category: "Business" },
-  { img: science, title: "Breakthrough in quantum computing networks", category: "Science" },
-  { img: politics, title: "Global summit reshapes climate goals for 2030", category: "Politics" },
+const fallbackItems = [
+  { img: world, title: "Citizen reporters uncover local environmental hazards", category: "World" },
+  { img: politics, title: "AI systems analyze credibility in new policy debates", category: "Politics" },
+  { img: business, title: "Crowdsourced data reveals shifting market trends", category: "Business" },
+  { img: tech, title: "New platform empowers grassroots journalism", category: "Technology" },
+  { img: science, title: "Community tracking helps identify new cosmic phenomena", category: "Science" },
+  { img: culture, title: "Independent creators challenge traditional media narratives", category: "Culture" },
 ];
 
 export function NewsShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const { data: remoteItems = [] } = useQuery({
+    queryKey: ['showcase_news'],
+    queryFn: async () => {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/list`);
+      if (!res.ok) return [];
+      const json = await res.json();
+      return (json.data || []).map((r: any) => ({
+        img: r.img_url || fallbackItems[0].img, 
+        title: r.summary || r.breaking || "Live Update",
+        category: r.category || "World",
+        date: r.created_at || new Date().toISOString(),
+      })).slice(0, 6);
+    }
+  });
+
+  const newsItems = remoteItems.length >= 3 ? remoteItems : fallbackItems.map(item => ({ ...item, date: new Date().toISOString() }));
 
   useEffect(() => {
     if (!carouselRef.current || !containerRef.current) return;
@@ -76,7 +96,7 @@ export function NewsShowcase() {
               A Global Perspective
             </h2>
             <p className="text-muted-foreground text-lg">
-              Explore our premium reporting through a dynamic, scroll-driven newsroom that turns the world to you.
+              Explore our real-time, citizen-driven journalism through a dynamic, AI-curated newsroom that brings the world's most critical stories directly to you.
             </p>
           </div>
         </Reveal>
@@ -88,7 +108,7 @@ export function NewsShowcase() {
             className="w-full h-full relative"
             style={{ transformStyle: "preserve-3d" }}
           >
-            {newsItems.map((item, index) => {
+            {newsItems.map((item: any, index: number) => {
               // Distribute items evenly in a circle (360 / 6 = 60 degrees each)
               const angle = (360 / newsItems.length) * index;
               
@@ -99,13 +119,20 @@ export function NewsShowcase() {
               return (
                 <div
                   key={index}
+                  onClick={() => {
+                    const d = new Date(item.date);
+                    const year = d.getFullYear().toString();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    navigate({ to: '/newspaper/$year/$month/$day', params: { year, month, day } });
+                  }}
                   className="absolute top-1/2 left-1/2 w-[220px] md:w-[250px] h-[320px] bg-card rounded-2xl overflow-hidden border border-border shadow-xl hover:shadow-2xl hover:border-primary/30 cursor-pointer group"
                   style={{
                     transform: `translate(-50%, -50%) rotateY(${angle}deg) translateZ(${tz}px)`,
                     backfaceVisibility: "hidden"
                   }}
                 >
-                  <img src={item.img} alt={item.title} className="w-full h-[50%] object-cover border-b border-border" />
+                  <img src={item.img} alt={item.title} className="w-full h-[50%] object-cover border-b border-border bg-neutral-100" />
                   <div className="p-5 h-[50%] flex flex-col justify-between bg-card">
                     <div>
                       <div className="text-[10px] font-semibold text-primary mb-1 uppercase tracking-wider">{item.category}</div>

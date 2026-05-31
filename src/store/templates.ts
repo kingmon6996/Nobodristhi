@@ -55,10 +55,41 @@ interface TemplateState {
   templates: NewsTemplate[];
   activeTemplateId: string;
   setActiveTemplate: (id: string) => void;
+  loadActiveTemplate: () => Promise<void>;
 }
 
 export const useTemplates = create<TemplateState>((set) => ({
   templates: TEMPLATES,
   activeTemplateId: "template1",
-  setActiveTemplate: (id) => set({ activeTemplateId: id }),
+  loadActiveTemplate: async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/template/get`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.template_number) {
+          set({ activeTemplateId: `template${json.template_number}` });
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load active template", err);
+    }
+  },
+  setActiveTemplate: async (id) => {
+    set({ activeTemplateId: id });
+    const match = id.match(/\d+/);
+    if (match) {
+      const template_number = parseInt(match[0], 10);
+      try {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/template/save`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ template_number }),
+        });
+      } catch (err) {
+        console.error("Failed to save template", err);
+      }
+    }
+  },
 }));
