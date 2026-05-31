@@ -25,7 +25,7 @@ function ReportReview() {
   const { data: reports = [] } = useQuery({
     queryKey: ['processed_reports'],
     queryFn: async () => {
-      const res = await fetch(getBackendUrl('/processed'));
+      const res = await fetch(getBackendUrl('/processed/'));
       if (!res.ok) throw new Error("Failed to fetch");
       const json = await res.json();
       return json.data || [];

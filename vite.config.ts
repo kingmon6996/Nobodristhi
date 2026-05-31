@@ -18,7 +18,7 @@ export default defineConfig({
       allowedHosts: ["olivia.hidencloud.com", "nobodorshi.kingmon.xyz"],
       proxy: {
         '/api': {
-          target: process.env.VITE_BACKEND_URL || 'http://ariella.hidencloud.com:24652',
+          target: process.env.VITE_BACKEND_URL || 'https://nub.kingmon.xyz',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         }
