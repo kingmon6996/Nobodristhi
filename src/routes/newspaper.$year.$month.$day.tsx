@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { useReports, type Report } from "@/store/reports";
 import { SECTION_FILLERS, type FillerStory } from "@/lib/section-fillers";
+import { getBackendUrl } from "@/lib/utils";
 
 export const Route = createFileRoute("/newspaper/$year/$month/$day")({
   head: ({ params }) => ({
@@ -44,7 +45,7 @@ function NewspaperViewer() {
   const { data: reports = [] } = useQuery<Report[]>({
     queryKey: ['daily_news', year, month, day],
     queryFn: async () => {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/list-daily`, {
+      const res = await fetch(getBackendUrl('/admin/list-daily'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ timestamp: `${year}-${month}-${day}` }),

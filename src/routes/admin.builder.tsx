@@ -3,6 +3,7 @@ import { Sparkles, Newspaper, ArrowUp, ArrowDown, GripVertical, Star, Trash2 } f
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Topbar } from "@/components/dash/Topbar";
+import { getBackendUrl } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/builder")({
   component: Builder,
@@ -12,7 +13,7 @@ function Builder() {
   const { data: approvedOrPending = [] } = useQuery({
     queryKey: ['completed_news'],
     queryFn: async () => {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/list`);
+      const res = await fetch(getBackendUrl('/admin/list'));
       if (!res.ok) return [];
       const json = await res.json();
       return (json.data || []).map((r: any) => ({

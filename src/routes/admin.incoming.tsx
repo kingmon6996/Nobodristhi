@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-ro
 import { Topbar } from "@/components/dash/Topbar";
 import { StatusBadge } from "@/components/dash/StatusBadge";
 import { useQuery } from "@tanstack/react-query";
+import { getBackendUrl } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/incoming")({
   component: IncomingLayout,
@@ -11,7 +12,7 @@ function IncomingLayout() {
   const { data: reports = [] } = useQuery({
     queryKey: ['processed_reports'],
     queryFn: async () => {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/processed`);
+      const res = await fetch(getBackendUrl('/processed'));
       if (!res.ok) throw new Error("Failed to fetch");
       const json = await res.json();
       return json.data || [];

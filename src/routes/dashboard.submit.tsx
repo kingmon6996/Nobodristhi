@@ -6,6 +6,7 @@ import { Topbar } from "@/components/dash/Topbar";
 import { ImageUpload } from "@/components/dash/ImageUpload";
 import { AIProcessing } from "@/components/dash/AIProcessing";
 import { mockAIProcess, useReports, type Category } from "@/store/reports";
+import { getBackendUrl } from "@/lib/utils";
 
 
 export const Route = createFileRoute("/dashboard/submit")({
@@ -157,7 +158,7 @@ function SubmitPage() {
         formData.append("image", images[0]);
       }
 
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/raw/report`, {
+      await fetch(getBackendUrl('/raw/report'), {
         method: 'POST',
         body: formData
       });

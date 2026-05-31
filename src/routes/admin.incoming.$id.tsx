@@ -1,10 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
-  Check, X, RotateCcw, Zap, ShieldQuestion, Calendar, MapPin, Mic, Image as ImageIcon,
+  Check, X, RotateCcw, Zap, ShieldQuestion, Calendar, MapPin, Mic, Image as ImageIcon, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { StatusBadge } from "@/components/dash/StatusBadge";
+import { Topbar } from "@/components/dash/Topbar";
 import { useQuery } from "@tanstack/react-query";
+import { getBackendUrl } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/incoming/$id")({
   component: ReportReview,
@@ -23,7 +25,7 @@ function ReportReview() {
   const { data: reports = [] } = useQuery({
     queryKey: ['processed_reports'],
     queryFn: async () => {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/processed`);
+      const res = await fetch(getBackendUrl('/processed'));
       if (!res.ok) throw new Error("Failed to fetch");
       const json = await res.json();
       return json.data || [];
@@ -40,7 +42,7 @@ function ReportReview() {
     try {
       const finalImage = report.img_url && report.img_url.length > 0 ? report.img_url[selectedImageIndex] : null;
       
-      let url = `${import.meta.env.VITE_BACKEND_URL}/admin/${status === "approved" ? "approve" : "reject"}`;
+      let url = getBackendUrl(`/admin/${status === "approved" ? "approve" : "reject"}`);
       
       const payload: any = {
         processed_id: report.processed_id
@@ -117,7 +119,7 @@ function ReportReview() {
                 .map((item: any, i: number) => {
                   const { src, originalIndex } = item;
                   // Ensure relative URLs point to the backend
-                  const imageUrl = src.startsWith("http") ? src : `${import.meta.env.VITE_BACKEND_URL}${src.startsWith("/") ? "" : "/"}${src}`;
+                  const imageUrl = src.startsWith("http") ? src : getBackendUrl(src.startsWith("/") ? src : `/${src}`);
                   
                   return (
                     <div 
