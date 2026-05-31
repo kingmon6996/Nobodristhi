@@ -1,0 +1,67 @@
+/* Newsletter Auth Container */
+.newsletter-auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Subscribe Button Styling */
+.newsletter-subscribe-btn {
+  background-color: hsl(var(--foreground));
+  color: hsl(var(--background));
+  border: 2px solid hsl(var(--foreground));
+  font-weight: 600;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.newsletter-subscribe-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.newsletter-subscribe-btn:active {
+  transform: translateY(0);
+}
+
+/* Fade-in animation for the success message */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* User Profile Button Styling (after subscription) */
+.user-profile-button {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease;
+}
+
+.user-profile-button:hover {
+  background-color: hsl(var(--accent));
+}
+
+.user-profile-internal-button {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+}
+
+.user-profile-internal-button:hover {
+  background-color: hsl(var(--secondary));
+}

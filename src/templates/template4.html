@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zaira Magazine - Page A4 Local &amp; Metro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#c1c8ca",
+                        "inverse-on-surface": "#eff1f5",
+                        "on-surface": "#191c1f",
+                        "surface-container-low": "#f2f3f7",
+                        "secondary-fixed": "#dde4e6",
+                        "on-tertiary-fixed-variant": "#3e484c",
+                        "on-secondary-fixed-variant": "#41484a",
+                        "surface-container": "#edeef2",
+                        "outline-variant": "#dec0bb",
+                        "on-background": "#191c1f",
+                        "surface-bright": "#f8f9fd",
+                        "surface-container-highest": "#e1e2e6",
+                        "background": "#f8f9fd",
+                        "surface-dim": "#d9dade",
+                        "primary-fixed": "#ffdad5",
+                        "inverse-primary": "#ffb4a9",
+                        "secondary": "#586062",
+                        "primary-container": "#ff7b6b",
+                        "on-secondary-fixed": "#161d1f",
+                        "primary": "#a6392e",
+                        "on-tertiary-fixed": "#131d21",
+                        "inverse-surface": "#2e3134",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#86221a",
+                        "primary-fixed-dim": "#ffb4a9",
+                        "surface": "#f8f9fd",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#9aa5a9",
+                        "surface-variant": "#e1e2e6",
+                        "surface-container-high": "#e7e8ec",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#bdc8cd",
+                        "on-surface-variant": "#57423f",
+                        "surface-tint": "#a6392e",
+                        "tertiary-fixed": "#d9e4e9",
+                        "on-secondary-container": "#5d6466",
+                        "outline": "#8b716e",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#72130e",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#dae1e3",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#410001",
+                        "tertiary": "#556064",
+                        "on-tertiary-container": "#303b3f",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "grid-margin": "24px",
+                        "xs": "8px",
+                        "xl": "80px",
+                        "md": "24px",
+                        "sm": "16px",
+                        "lg": "48px",
+                        "grid-gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Hanken Grotesk"],
+                        "body-sm": ["Inter"],
+                        "display-xl": ["Hanken Grotesk"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+                        "display-xl": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "38px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "30px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .newspaper-columns {
+            column-count: 6;
+            column-gap: 20px;
+            column-rule: 1px solid #dfe6e9; /* Light gray from spec, not theme mapped to keep it explicit to spec note, though outline-variant is preferred usually. Let's use outline-variant to adhere to theme where possible, but spec said #dfe6e9. Actually, let's just stick to the CSS standard for column-rule. */
+        }
+        @media (max-width: 1024px) {
+            .newspaper-columns { column-count: 4; }
+        }
+        @media (max-width: 768px) {
+            .newspaper-columns { column-count: 2; }
+        }
+        @media (max-width: 480px) {
+            .newspaper-columns { column-count: 1; column-rule: none; }
+        }
+        .text-justify { text-align: justify; }
+        .tight-leading { line-height: 1.3; } /* Tighter than default for broadsheet feel */
+        .drop-cap::first-letter {
+            font-size: 3rem;
+            float: left;
+            margin-right: 0.1em;
+            line-height: 1;
+            font-weight: 700;
+            color: #a6392e; /* primary */
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden">
+<!-- Main Canvas -->
+<main class="mb-xl max-w-[1440px] mx-auto px-grid-margin">
+<!-- Newspaper Folio -->
+<div class="w-full border-b border-t border-outline-variant py-xs flex justify-between items-center mb-md mt-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Local &amp; Metro</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold uppercase">ZAIRA</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Page A4 • Tuesday Edition</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-grid-gutter">
+<!-- Left 8 Columns: Main Metro News -->
+<div class="lg:col-span-8 flex flex-col gap-lg">
+<!-- Lead Story (Spans multiple broadsheet columns) -->
+<article class="border-b border-outline-variant pb-md">
+<h1 class="font-display-xl text-display-xl text-on-surface mb-sm leading-none">City Council Passes Historic Zoning Reform After Marathon Session</h1>
+<div class="flex gap-sm items-center mb-md">
+<span class="font-label-caps text-label-caps text-primary border border-primary px-xs py-[2px] uppercase">Politics</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">By Eleanor Vance</span>
+</div>
+<div class="w-full aspect-[16/9] bg-surface-container-high mb-sm relative overflow-hidden group">
+<img alt="City Council Chamber" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A wide angle, slightly desaturated photograph of a grand, empty city council chamber with rows of wooden desks. The lighting is dramatic, streaming in from high windows, highlighting dust motes in the air. The aesthetic is serious, traditional, and institutional, fitting a high-density, minimalist editorial style with a muted color palette favoring warm wood tones and cool shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyep4QYj318EkY41piOSkW3JakyA3GGOTzxg0xh3jR_zi2z_K0szMGjxuF_oLmKRLt2jf6UoPwp5el0xqoCeKIw05rfLS2jnxQBYoDKoizO7l2LpFIwr9if-d9FRSiBYvof6L0USC6exyf8E4MWBJj4_n87NKtLkYTE6nZjMTV9EUr4EhAz_gKRHzjq2ieZf7ycJ3WQxx0B3DGepqXi8mPxc3bPF9_FENo3kQl6g1emk8OzvaE3KVMFIAo8YnFJ2VSQZD5rc80YHI"/>
+</div>
+<div class="newspaper-columns text-justify text-body-sm text-on-surface tight-leading mt-sm">
+<p class="drop-cap mb-base">In a sweeping move that promises to reshape the urban landscape, the city council voted 9-3 early this morning to approve the comprehensive zoning reform package. The legislation, debated for nearly fourteen hours in front of a packed gallery, effectively eliminates single-family zoning requirements in several key transit corridors, opening the door for increased density and multi-family developments in neighborhoods that have historically resisted such changes.</p>
+<p class="mb-base">Mayor Thomas Thorne, who had staked much of his political capital on the bill, released a brief statement immediately following the vote. "Tonight, we chose progress over preservation," Thorne stated. "This is the first step in addressing an affordability crisis that has threatened the core vitality of our metropolitan area for decades."</p>
+<p class="mb-base">However, the decision has already sparked intense backlash. Several neighborhood associations from the West End have threatened litigation, citing concerns over infrastructure strain and the potential alteration of neighborhood character. Councilwoman Martinez, a vocal opponent, argued vehemently that the bill acts as a "blank check to developers," bypassing necessary community input processes.</p>
+<p class="mb-base">The new regulations will take effect in six months, initiating what experts predict will be a slow but inevitable transformation of the city's residential fabric. Real estate analysts anticipate a surge in permit applications for duplexes and small apartment buildings in the affected zones by year's end.</p>
+<p>Implementation details, including the creation of a specialized review board to handle the expected influx of multi-family project proposals, are slated to be finalized during next month's council session. Observers note that the true test of the legislation will lie in its enforcement and the city's ability to upgrade aging utility networks concurrently with new construction.</p>
+</div>
+</article>
+<!-- Secondary Stories Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-grid-gutter">
+<!-- Story 2 -->
+<article class="border-r border-outline-variant pr-grid-gutter flex flex-col gap-xs group">
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight group-hover:text-primary transition-colors">Transit Authority Announces Delay on Blue Line Extension</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Metro Transit</span>
+<p class="font-body-sm text-body-sm text-on-surface text-justify tight-leading mt-xs">Commuters expecting relief on the congested western corridor will have to wait longer. The Metropolitan Transit Authority confirmed Tuesday that unforeseen engineering challenges have pushed the completion date of the Blue Line extension back by at least fourteen months. Costs are expected to rise proportionately.</p>
+<p class="font-body-sm text-body-sm text-on-surface text-justify tight-leading mt-xs">Chief Engineer Sarah Jenkins cited complex bedrock formations discovered near the proposed terminal station as the primary cause for the delay, requiring a redesign of the tunnel boring approach.</p>
+</article>
+<!-- Story 3 -->
+<article class="flex flex-col gap-xs group">
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight group-hover:text-primary transition-colors">Public Library System Secures Grant for Digital Archives</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Education</span>
+<p class="font-body-sm text-body-sm text-on-surface text-justify tight-leading mt-xs">A $2.5 million federal grant will allow the central library to digitize over a century of local historical documents, preventing the physical deterioration of critical metropolitan records. The project will begin next quarter.</p>
+<div class="w-full aspect-[16/9] bg-surface-container-high mt-sm relative overflow-hidden">
+<img alt="Library Archives" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A close-up, high-contrast black and white photograph of dusty, leather-bound books stacked haphazardly on a wooden table in a dimly lit library. The lighting is focused and directional, creating deep shadows that emphasize texture. The aesthetic is historical, quiet, and slightly melancholic, aligning with a sophisticated, minimalist editorial design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAusLP1D_JQh3UGnJinaZ8vVSWPay8pV7vrTnDnAwZksry1rRpAJnh5cVDLzKi-a05ezLE7smN5iQYLMQKstJZPHEyPyAukW9fqF1lOQp78IZ_qbjIotS1somdToFYyEM7rX6H4EhLK18ywCaqayU3J-gF-UlSz3OBVKA2BRQ-8Go_NeclBapd5VTnCjgoyuX45Tq3iMX7wmei5aO48FMN99AjEZc_EIAf3adVg47Y2LgSuh5B0jVDpIvD0d2GbriyKw1M6fFi2iIs"/>
+</div>
+</article>
+</div>
+</div>
+<!-- Right 4 Columns: Sidebars and Briefs -->
+<aside class="lg:col-span-4 flex flex-col gap-md border-l border-outline-variant pl-grid-gutter">
+<!-- Neighborhood Briefs (Dense List View) -->
+<div class="bg-surface-container-low p-md flex flex-col gap-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase border-b-2 border-primary pb-xs mb-xs">In Your Neighborhood</h3>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Northside</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Community Garden Expansion Approved</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">The vacant lot on 4th and Elm will be transformed into a 20-plot community garden following a successful neighborhood fundraising campaign.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Downtown</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Summer Concert Series Relocated</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">Due to plaza renovations, the annual free summer concert series will temporarily move to Waterfront Park starting in June.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">East End</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Historic Theater Seeks Preservation Status</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">Local activists have petitioned the city to grant landmark status to the aging Rialto Theater to prevent its proposed demolition.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Westside</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">New Community Center Opens Next Month</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">After three years of construction, the state-of-the-art community center featuring a gymnasium, pool, and youth programs will welcome residents on June 15th.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Riverside</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Environmental Group Plants 500 Trees</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">Local volunteers completed an urban reforestation initiative along the riverfront, adding native species to improve air quality and habitat for local wildlife.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Midtown</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Street Fair Celebrates Local Businesses</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">The annual Midtown Street Fair showcased over 80 local vendors, restaurants, and artisans, drawing thousands of residents and generating record sales for small businesses.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">North Heights</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">School District Announces Renovation Plans</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">North Heights Elementary will undergo extensive renovations including updated classroom technology and expanded playground facilities over the summer break.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Harbor District</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Waterfront Promenade Expansion Completed</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">The new waterfront extension now features dining venues, walking paths, and public art installations, attracting visitors from across the metropolitan area.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Arts Quarter</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Gallery District Celebrates Fifth Anniversary</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">The revitalized Arts Quarter marks five years of cultural renaissance with over 40 galleries, artist studios, and performance venues now operating in the historic district.</p>
+</div>
+<div class="flex flex-col gap-xs border-b border-outline-variant pb-sm">
+<span class="font-label-caps text-label-caps text-primary uppercase">Tech Park</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Innovation Hub Attracts Major Corporate Investment</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">Three Fortune 500 companies have announced plans to establish offices in the emerging Tech Park, bringing hundreds of high-wage jobs to the neighborhood.</p>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-primary uppercase">Greenfield</span>
+<p class="font-body-sm text-body-sm font-bold text-on-surface leading-tight">Public Park Restoration Initiative Underway</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant tight-leading text-justify">A $5 million restoration project is transforming the century-old Central Park with new walking trails, sports facilities, and restored historical monuments.</p>
+</div>
+</div>
+
+</aside>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ZAIRA | The Daily Broadsheet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&amp;family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&amp;family=Chomsky&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "newsprint": "#f4f4f2",
+                        "ink": "#1a1a1a",
+                        "primary": "#a6392e"
+                    },
+                    "fontFamily": {
+                        "masthead": ["Playfair Display", "serif"],
+                        "headline": ["Playfair Display", "serif"],
+                        "body": ["Libre Baskerville", "serif"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        @import url('https://fonts.cdnfonts.com/css/chomsky');
+        
+        .newspaper-masthead {
+            font-family: 'Chomsky', 'Playfair Display', serif;
+        }
+        
+        .justified {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .broadsheet-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+
+        .rule-vertical {
+            border-right: 1px solid #1a1a1a;
+            padding-right: 10px;
+            margin-right: -10px;
+        }
+
+        .rule-top {
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .rule-bottom {
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .double-rule-bottom {
+            border-bottom: 3px double #1a1a1a;
+        }
+
+        .dropcap::first-letter {
+            float: left;
+            font-size: 3.5rem;
+            line-height: 0.8;
+            margin: 0.1em 0.1em 0.1em 0;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+        }
+
+        /* Responsive adjustments for the grid */
+        @media (max-width: 1024px) {
+            .broadsheet-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            .broadsheet-grid {
+                grid-template-columns: 1fr;
+            }
+            .rule-vertical {
+                border-right: none;
+                border-bottom: 1px solid #1a1a1a;
+                padding-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-newsprint text-ink selection:bg-primary selection:text-white p-4 md:p-8 font-body">
+<!-- Top Newspaper Header -->
+<header class="max-w-[1280px] mx-auto text-center mb-8">
+<div class="flex justify-between items-end border-b border-ink py-1 text-xs font-bold uppercase tracking-widest">
+<div class="text-left w-1/3">VOL. CLXXV .... No. 60,892</div>
+<div class="w-1/3 text-center">NEW YORK, SATURDAY, MAY 30, 2026</div>
+<div class="text-right w-1/3 italic">Late City Edition</div>
+</div>
+<div class="py-6 border-b-4 border-ink">
+<h1 class="newspaper-masthead text-[80px] md:text-[140px] leading-none tracking-tight">ZAIRA</h1>
+</div>
+<div class="flex justify-between border-b-2 border-ink py-1 text-[10px] font-bold uppercase">
+<div>"All the News That's Fit to Print"</div>
+<div class="flex gap-4">
+<span>Weather: High 78, Low 62. Details, Page C10.</span>
+</div>
+<div>$3.00</div>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto">
+<!-- Main Body Grid -->
+<div class="broadsheet-grid">
+<!-- Column 1 & 2: Lead Story -->
+<div class="col-span-1 md:col-span-3 lg:col-span-4 rule-vertical">
+<article class="mb-8">
+<h2 class="font-headline text-4xl md:text-6xl font-black leading-tight mb-4 tracking-tighter">
+                        Judge Reopens Trump’s I.R.S. Suit and Questions His ‘Weaponization’ Fund
+                    </h2>
+<div class="aspect-video mb-4 overflow-hidden border border-ink">
+<img alt="Courtroom Gavel" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZdc-GKoSRxW6qvz6nQ9Dikilyltu6lhEXuU8eb06WAbqzGoX4Lhh5IZrP8Vs5v7fIQYn2tew6sFOfpNo6ECdSr_pGjm6UbguGQ8yQOsWJKruWXqqUgX7J6MhiEjDInJ8FsAKyLRBXtJsvCwxuHHehyuIsOkLvDpab_8rgX-uH7QtWKjZw863bzCuYSCfBug0gd1HKCqN27QhV15K4ILaZhzmB7O_XKGWHDrdp81wP2bR1ukXsH1MmXdiSb9YZn_mmJYBv9AkhgPQ"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<p class="font-bold text-sm mb-2 uppercase">By DOUG MILLS</p>
+<p class="justified dropcap leading-relaxed text-sm">
+                                The ruling was a blow to both President Trump and to the Justice Department, which used the suit to establish a fund likely intended for Trump allies. Federal judges have expressed deep skepticism regarding the legality of the administrative maneuvers used to shield these specific assets from public oversight.
+                            </p>
+</div>
+<div class="justified text-sm leading-relaxed">
+<p class="mb-4">
+                                Legal experts suggest that this reopening of the suit could lead to a broader discovery phase, potentially revealing internal communications about the "weaponization" fund's origins.
+                            </p>
+<p>
+                                "This is about accountability," said one legal observer. "The court is asking fundamental questions about how executive power is being deployed."
+                            </p>
+<div class="mt-4 pt-4 border-t border-ink italic text-xs">
+                                Continued on Page A14
+                            </div>
+</div>
+</div>
+</article>
+<!-- Sub-features in the main area -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 rule-top pt-6">
+<article class="rule-vertical pr-6">
+<h3 class="font-headline text-2xl font-bold leading-tight mb-2">After Judge Orders His Name Off Kennedy Center, Trump Reacts With Fury</h3>
+<p class="justified text-xs leading-relaxed">President Trump railed against the judge’s ruling, suggesting that it might prompt him to cast the center aside after more than a year at its helm.</p>
+</article>
+<article>
+<h3 class="font-headline text-2xl font-bold leading-tight mb-2">Bondi, Pressed Over Epstein Files, Points Finger at Blanche and Patel</h3>
+<p class="justified text-xs leading-relaxed">Pam Bondi, fired as attorney general by President Trump in April, insisted that she had little real authority in overseeing the release of the Epstein files.</p>
+</article>
+</div>
+</div>
+<!-- Column 3: Secondary Headlines -->
+<div class="col-span-1 md:col-span-3 lg:col-span-2 flex flex-col gap-6">
+<article class="rule-bottom pb-6">
+<div class="mb-2 uppercase text-[10px] font-bold tracking-widest text-primary border-b border-primary inline-block">Middle East</div>
+<h3 class="font-headline text-2xl font-bold leading-tight mb-2">Israeli Troops Push Deeper Into Lebanon as Cease-Fire Talks Continue</h3>
+<p class="justified text-xs leading-relaxed">Military movements intensify near the Litani river despite diplomatic efforts in Geneva. Iran’s hard-liners try to derail potential deal with the U.S.</p>
+</article>
+<article class="rule-bottom pb-6">
+<div class="mb-2 uppercase text-[10px] font-bold tracking-widest text-primary border-b border-primary inline-block">New York</div>
+<h3 class="font-headline text-xl font-bold leading-tight mb-2">Among Mamdani’s Priorities, Economic Development Seems Low on the List</h3>
+<p class="justified text-xs leading-relaxed">Mayor Zohran Mamdani has not filled the role of president of the Economic Development Corporation, deepening concern over his attention to the economy.</p>
+</article>
+<article class="rule-bottom pb-6">
+<div class="mb-2 uppercase text-[10px] font-bold tracking-widest text-primary border-b border-primary inline-block">Science</div>
+<h3 class="font-headline text-xl font-bold leading-tight mb-2">China’s Rise in Drug Development Looms Over U.S.</h3>
+<div class="aspect-square mb-2">
+<img alt="Drug Tech" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsAKz1m8BAcyQxurD1YOnGe4Uwsswyke0VEN1_crRxXSwpI7mTQFHcJYKHgFP-0sY71v5jPlZgW-pOt7LJOvLbbHo8VpLWC2qvK69wGfp-8TyfHCjj_ZJhMAlE3W5rSy9a3HADYxl51V-QMtmJeRQ9KsYOzl9IzCtlgWxy2retjACk93234jOwwYNuh3wxsWAwZpeC-vKYMiDBO3hUNaA8OQ1Nx4UBLQMPTnHF1-xsjPTX2-7KgfuhT8Pz2Za-3snV3WBMqprELmI"/>
+</div>
+<p class="justified text-xs leading-relaxed">China’s surging biotechnology sector is fueling alarm that U.S. dominance in the field is waning as clinical trials gain global attention.</p>
+</article>
+</div>
+</div>
+<!-- Full Width Separator -->
+<div class="my-8 py-2 border-y-2 border-ink bg-white/50 text-center font-bold italic text-sm">
+            Inside Today’s Zaira: Arts &amp; Leisure (Page B1), The Business Times (Page D1), Weekend Reviews (Page E1)
+        </div>
+<!-- Lower Grid Sections -->
+<div class="broadsheet-grid">
+<!-- Left Panel: Briefing Column -->
+<div class="col-span-1 md:col-span-1 rule-vertical border-ink">
+<div class="border-b-4 border-ink mb-4 pb-1">
+<h4 class="font-headline font-black text-lg uppercase">The Briefing</h4>
+</div>
+<div class="flex flex-col gap-6">
+<div class="rule-bottom pb-4">
+<span class="text-[10px] font-black block mb-1 uppercase">08:45 AM</span>
+<h5 class="text-xs font-bold leading-tight mb-1">ICE Agents to Leave Site of Volatile Newark Protests</h5>
+<p class="text-[10px] italic">Clashes erupt at Delaney Hall parking lot.</p>
+</div>
+<div class="rule-bottom pb-4">
+<span class="text-[10px] font-black block mb-1 uppercase">07:55 AM</span>
+<h5 class="text-xs font-bold leading-tight mb-1">Homelessness Declined in 2024, HUD Report Shows</h5>
+<p class="text-[10px] italic">First decrease in nearly a decade.</p>
+</div>
+<div class="rule-bottom pb-4">
+<span class="text-[10px] font-black block mb-1 uppercase">06:20 AM</span>
+<h5 class="text-xs font-bold leading-tight mb-1">Spencer Pratt’s Dark Visions of L.A. Resonate</h5>
+<p class="text-[10px] italic">Reality star shakes up mayoral race.</p>
+</div>
+</div>
+</div>
+<!-- Middle Columns: Diversified News -->
+<div class="col-span-1 md:col-span-4 rule-vertical">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<article>
+<h3 class="font-headline text-2xl font-bold leading-tight mb-2 italic">Editorial: Rules Aren’t Enough. Only a Law Can Stop Vindictive Prosecutions.</h3>
+<p class="justified text-xs leading-relaxed mb-4">Andrew Weissmann argues that institutional norms are failing in the face of political weaponization. A legislative fix is required to protect the judiciary.</p>
+<div class="rule-top pt-4">
+<h3 class="font-headline text-xl font-bold leading-tight mb-2">Blue Origin and Amazon Momentum Stalled by Fireball</h3>
+<div class="aspect-video mb-2">
+<img alt="Rocket Setback" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFhNEnpPlidjPZnXYSlrpQ8DU79XYHKuKaWd-_XY5OIjT3iDFPBYVw55CbgOXZnUXwSH90HcssO4y_-KYTQzRiRxiwJUjVUmRzFZor6pFcDH6w28i8o2ra39gHSeHg7ghcX9iS5EzQuP1ePQpk_JM8BA0MAYhaU--IyEAOhyebZMv5o-6LnjmSQ6jMnNBQqThCl_XKoon6fe6L9a3rODqON55srVzuDJNAXFA3XTT35BbcY_X1SWolE4It8ejAdLX9Drbk2Zrkm7Y"/>
+</div>
+<p class="justified text-xs leading-relaxed">Jeff Bezos was gaining ground on Musk, but Thursday’s explosion creates a major setback.</p>
+</div>
+</article>
+<article>
+<h3 class="font-headline text-2xl font-bold leading-tight mb-2">The Formula to Defeat a Strongman</h3>
+<p class="justified text-sm leading-relaxed mb-4">M. Gessen explores the political maneuvers that unseated authoritarian leaders across Europe and what lessons apply to the current American landscape. The strategy involves unified coalitions and clear, uncompromising messaging.</p>
+<div class="bg-ink text-white p-4 mb-4">
+<h4 class="font-headline text-lg italic mb-2">Special Feature: Broadway Sloshed</h4>
+<p class="text-xs italic">Watch Kelli O’Hara and Rose Byrne Get Laughs Getting Sloshed in "Fallen Angels". Page B4.</p>
+</div>
+<div class="rule-top pt-4">
+<h3 class="font-headline text-lg font-bold leading-tight mb-1">Trump Endorses Pamela Evette in South Carolina</h3>
+<p class="justified text-xs">Endorsement solidifies hold over GOP machinery ahead of November.</p>
+</div>
+</article>
+</div>
+</div>
+<!-- Right Column: More News & Index -->
+<div class="col-span-1 md:col-span-1">
+<article class="mb-6">
+<h3 class="font-headline text-lg font-bold leading-tight mb-1">Japan’s Immigration Crackdown</h3>
+<p class="justified text-xs leading-relaxed">How curry shops got caught in the crossfire of Prime Minister Takaichi's new visa rules.</p>
+</article>
+<article class="mb-6 rule-top pt-4">
+<h3 class="font-headline text-lg font-bold leading-tight mb-1">Europe’s Schools Bake</h3>
+<p class="justified text-xs leading-relaxed">Heat season extends, forcing infrastructure overhauls in academic calendars.</p>
+</article>
+<div class="border-4 border-ink p-2 mt-8">
+<h4 class="font-headline font-black text-center text-sm uppercase border-b border-ink mb-2">Index</h4>
+<div class="text-[10px] leading-relaxed">
+<div class="flex justify-between"><span>Arts</span><span>B1</span></div>
+<div class="flex justify-between"><span>Business</span><span>D1</span></div>
+<div class="flex justify-between"><span>Crossword</span><span>C12</span></div>
+<div class="flex justify-between"><span>Editorials</span><span>A22</span></div>
+<div class="flex justify-between"><span>Food</span><span>F1</span></div>
+<div class="flex justify-between"><span>Obituaries</span><span>A18</span></div>
+<div class="flex justify-between"><span>Sports</span><span>S1</span></div>
+<div class="flex justify-between"><span>Television</span><span>C11</span></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer / Bottom Rule -->
+<footer class="max-w-[1280px] mx-auto mt-12 pt-4 border-t-2 border-ink text-center text-[10px] font-bold uppercase tracking-widest text-ink/70">
+<p>© 2026 THE ZAIRA PUBLISHING COMPANY • ALL RIGHTS RESERVED • HIGH-DENSITY EDITORIAL EXCELLENCE</p>
+</footer>
+</body></html>
